@@ -1,0 +1,71 @@
+---
+title: "Tank_chemistry"
+author: "matsuda"
+date: "2023-03-20"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(lubridate)
+
+
+```
+
+Load data
+```{r}
+df<-read.csv("GT23 Chemistry.csv")
+df<-as_tibble(df)
+df<-df%>%
+  mutate_at(vars(Tank), factor)
+
+df$Date<-mdy(df$Date) #formate date
+  
+```
+
+Plot chemistry over time
+```{r}
+
+pd <- position_dodge(0.1)
+
+
+# Plot N
+N_plot<-ggplot(df, aes(x=Date, y=N, group=Tank)) +
+  geom_line(aes(color=Tank),position = pd)+
+  geom_point(aes(color=Tank),position = pd)+
+  theme_classic();N_plot
+
+# Plot P
+P_plot<-ggplot(df, aes(x=Date, y=P, group=Tank)) +
+  geom_line(aes(color=Tank),position = pd)+
+  geom_point(aes(color=Tank),position = pd)+
+    theme_classic();P_plot
+
+# Plot Alk
+A_plot<-ggplot(df, aes(x=Date, y=Alk, group=Tank)) +
+  geom_line(aes(color=Tank),position = pd)+
+  geom_point(aes(color=Tank),position = pd)+
+    theme_classic();A_plot
+
+# Plot Cal
+C_plot<-ggplot(df, aes(x=Date, y=Cal, group=Tank)) +
+  geom_line(aes(color=Tank),position = pd)+
+  geom_point(aes(color=Tank),position = pd)+
+    theme_classic();C_plot
+
+# Plot Mg
+M_plot<-ggplot(df, aes(x=Date, y=Mg, group=Tank)) +
+  geom_point(aes(color=Tank), position=pf)+
+    geom_line(aes(color=Tank),position = pd)+
+    theme_classic();M_plot
+
+
+#print all plots together
+grid.arrange(N_plot, P_plot,A_plot,C_plot,M_plot, nrow = 5)
+
+```
+
